@@ -19,16 +19,13 @@ public class RedisClient : IQueueClient
 
     public Task SendMessageToQueue(string message)
     {
-        await _database.ListLeftPushAsync(KeyName, message);
-        return _subscriber.PublishAsync(_queueName, message);
+        return _database.ListLeftPushAsync(KeyName, message);
     }
 
-    public Task ListenToQueue(Action<string> messageHandler)
+    public async Task<string> ReadFromQueue()
     {
-        return _subscriber.SubscribeAsync(_queueName, (channel, message) =>
-        {
-            messageHandler(message.ToString());
-        });
+        var value = await _database.ListRightPopAsync(KeyName);
+        return value.ToString();
     }
 
     public void Dispose()

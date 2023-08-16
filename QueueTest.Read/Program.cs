@@ -13,16 +13,11 @@ int count = 0;
 var stopwatch = new Stopwatch();
 stopwatch.Start();
 
-// it doesn't work
-await client.ListenToQueue(message =>
-{
-    Console.WriteLine($"Received message: {message}");
-    count++;
-});
-
 while (stopwatch.Elapsed < TimeSpan.FromMinutes(1))
 {
-    await Task.Delay(1000);
+    await client.ReadFromQueue();
+    count++;
 }
 
 Console.WriteLine($"Performed {count} operations");
+await File.WriteAllTextAsync($"{clientCode}_{port}_READ.txt", count.ToString());;

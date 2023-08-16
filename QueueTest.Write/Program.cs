@@ -22,3 +22,4 @@ while (stopwatch.Elapsed < TimeSpan.FromMinutes(1))
 }
 
 Console.WriteLine($"Performed {count} operations");
+await File.WriteAllTextAsync($"{clientCode}_{port}_WRITE.txt", count.ToString());

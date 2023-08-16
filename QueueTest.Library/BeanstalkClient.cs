@@ -17,6 +17,13 @@ public class BeanstalkClient : IQueueClient
         return _connection.Put(message);
     }
 
+    public async Task<string> ReadFromQueue()
+    {
+        var job = await _connection.Reserve(TimeSpan.FromMinutes(1));
+        await _connection.Delete(job.Id);
+        return job.Data;
+    }
+
     public async Task ListenToQueue(Action<string> messageHandler)
     {
         await _connection.Watch(TubeName);
