@@ -1,0 +1,34 @@
+version: '3.8'
+
+networks:
+  default:
+    name: prjctr13
+
+services:
+  redis-rdb:
+    image: 'redis:7.0.12'
+    command: redis-server --save 1 1 --appendonly no
+    ports:
+      - 6379:6379
+  redis-aof:
+    image: 'redis:7.0.12'
+    command: redis-server --save "" --appendonly yes
+    ports:
+      - 6380:6379
+  redis-no-persistence:
+    image: 'redis:7.0.12'
+    command: redis-server --save "" --appendonly no
+    ports:
+      - 6381:6379
+  beanstalkd:
+    image: schickling/beanstalkd
+    command: -b /var/lib/beanstalkd
+    ports:
+      - 11300:11300
+
+  beanstalkd-no-persistence:
+    image: schickling/beanstalkd
+    command: -b ""
+    ports:
+      - 11301:11300
+    
